@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>History - Speech2Text</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* =====================================================
+   SEARCH AND FILTER
+===================================================== */
+
+.history-controls {
+
+    display: flex;
+
+    gap: 15px;
+
+    justify-content: center;
+
+    align-items: center;
+
+    margin: 25px 0;
+
+    flex-wrap: wrap;
+
+}
+
+
+.history-search {
+
+    width: 350px;
+
+    max-width: 90%;
+
+    padding: 13px 18px;
+
+    border: none;
+
+    border-radius: 25px;
+
+    outline: none;
+
+    font-size: 15px;
+
+}
+
+
+.history-filter {
+
+    padding: 13px 18px;
+
+    border: none;
+
+    border-radius: 25px;
+
+    outline: none;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+}
+
+
+.clear-filter {
+
+    padding: 13px 20px;
+
+    border: none;
+
+    border-radius: 25px;
+
+    background: #38bdf8;
+
+    color: white;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+}
+
+
+.clear-filter:hover {
+
+    background: #0284c7;
+
+}
+
+        /* =====================================================
+           HISTORY TABLE
+        ===================================================== */
+
+        .history-container {
+
+            width: 100%;
+
+            margin-top: 30px;
+
+            overflow-x: auto;
+
+        }
+
+
+        .history-table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            background: rgba(255,255,255,0.12);
+
+            backdrop-filter: blur(15px);
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+
+        }
+
+
+        .history-table th {
+
+            background: rgba(255,255,255,0.20);
+
+            color: white;
+
+            padding: 18px;
+
+            text-align: left;
+
+            font-size: 17px;
+
+        }
+
+
+        .history-table td {
+
+            padding: 18px;
+
+            color: white;
+
+            border-top: 1px solid rgba(255,255,255,0.15);
+
+            vertical-align: middle;
+
+        }
+
+
+        .history-table tr:hover {
+
+            background: rgba(255,255,255,0.08);
+
+        }
+
+
+        .history-text {
+
+            max-width: 500px;
+
+            word-wrap: break-word;
+
+            line-height: 25px;
+
+        }
+
+
+        .history-source {
+
+            font-weight: 600;
+
+            white-space: nowrap;
+
+        }
+
+
+        .history-date {
+
+            white-space: nowrap;
+
+        }
+
+
+        /* =====================================================
+           COPY / DELETE BUTTONS
+        ===================================================== */
+
+        .history-action {
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .history-action button {
+
+            padding: 10px 18px;
+
+            border: none;
+
+            border-radius: 25px;
+
+            background: #38bdf8;
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
+        }
+
+
+        .history-action button:hover {
+
+            transform: translateY(-3px);
+
+            background: #0284c7;
+
+            box-shadow: 0 8px 15px rgba(0,0,0,0.25);
+
+        }
+
+
+        /* =====================================================
+           CLEAR ALL BUTTON
+        ===================================================== */
+
+        .clear-history-container {
+
+            display: flex;
+
+            justify-content: center;
+
+            margin-top: 35px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .clear-history-container button {
+
+            padding: 14px 30px;
+
+            border: none;
+
+            border-radius: 30px;
+
+            background: #38bdf8;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
+        }
+
+
+        .clear-history-container button:hover {
+
+            transform: translateY(-4px);
+
+            background: #0284c7;
+
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+
+        }
+
+
+        /* =====================================================
+           EMPTY HISTORY
+        ===================================================== */
+
+        .empty-history {
+
+            text-align: center;
+
+            padding: 60px 20px;
+
+            background: rgba(255,255,255,0.12);
+
+            backdrop-filter: blur(15px);
+
+            border-radius: 20px;
+
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+
+        }
+
+
+        .empty-history i {
+
+            font-size: 70px;
+
+            margin-bottom: 20px;
+
+            color: #38bdf8;
+
+        }
+
+
+        .empty-history h2 {
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .empty-history p {
+
+            color: #e5e7eb;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media(max-width: 700px) {
+
+            .history-table th,
+            .history-table td {
+
+                padding: 12px;
+
+                font-size: 14px;
+
+            }
+
+
+            .history-text {
+
+                max-width: 250px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<nav class="navbar">
+
+    <!-- LOGO -->
+
+    <div class="logo">
+
+        <i class="fas fa-microphone-alt"></i>
+
+        Speech2Text
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <ul>
+
+        <!-- DASHBOARD -->
+
+        <li>
+
+            <a href="/dashboard">
+
+                <i class="fas fa-chart-line"></i>
+
+                Dashboard
+
+            </a>
+
+        </li>
+
+
+        <!-- HOME -->
+
+        <li>
+
+            <a href="/">
+
+                <i class="fas fa-home"></i>
+
+                Home
+
+            </a>
+
+        </li>
+
+
+        <!-- LIVE SPEECH -->
+
+        <li>
+
+            <a href="/live">
+
+                <i class="fas fa-microphone"></i>
+
+                Live Speech
+
+            </a>
+
+        </li>
+
+
+        <!-- UPLOAD AUDIO -->
+
+        <li>
+
+            <a href="/upload">
+
+                <i class="fas fa-file-audio"></i>
+
+                Upload Audio
+
+            </a>
+
+        </li>
+
+
+        <!-- TEXT TO AUDIO -->
+
+        <li>
+
+            <a href="/text-to-audio">
+
+                <i class="fas fa-volume-up"></i>
+
+                Text to Audio
+
+            </a>
+
+        </li>
+
+
+        <!-- HISTORY -->
+
+        <li>
+
+            <a href="/history">
+
+                <i class="fas fa-clock-rotate-left"></i>
+
+                History
+
+            </a>
+
+        </li>
+
+
+        <!-- PROFILE -->
+
+        <li>
+
+            <a href="/profile">
+
+                <i class="fas fa-user"></i>
+
+                Profile
+
+            </a>
+
+        </li>
+
+
+        <!-- ABOUT -->
+
+        <li>
+
+            <a href="/about">
+
+                <i class="fas fa-info-circle"></i>
+
+                About
+
+            </a>
+
+        </li>
+
+
+        <!-- CONTACT -->
+
+        <li>
+
+            <a href="/contact">
+
+                <i class="fas fa-envelope"></i>
+
+                Contact
+
+            </a>
+
+        </li>
+
+
+        <!-- LOGOUT -->
+
+        <li>
+
+            <a href="/logout">
+
+                <i class="fas fa-sign-out-alt"></i>
+
+                Logout
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- =====================================================
+     HISTORY PAGE
+===================================================== -->
+
+<section class="page">
+
+
+    <h1>
+
+        <i class="fas fa-clock-rotate-left"></i>
+
+        Speech History
+
+    </h1>
+
+
+    <p class="subtitle">
+
+        View your previously converted speech.
+
+    </p>
+
+
+    <div class="history-container">
+
+
+        {% if records %}
+
+
+        <!-- =================================================
+             HISTORY TABLE
+        ================================================= -->
+
+        <table class="history-table">
+            <!-- =================================================
+     SEARCH AND FILTER
+================================================= -->
+
+<div class="history-controls">
+
+    <input
+        type="text"
+        id="historySearch"
+        class="history-search"
+        placeholder="🔍 Search history..."
+    >
+
+
+    <select
+        id="historyFilter"
+        class="history-filter"
+    >
+
+        <option value="all">
+            All Types
+        </option>
+
+        <option value="Live Speech">
+            Live Speech
+        </option>
+
+        <option value="Upload Audio">
+            Upload Audio
+        </option>
+
+        <option value="Text to Audio">
+            Text to Audio
+        </option>
+
+    </select>
+
+
+    <button
+        type="button"
+        id="clearFilter"
+        class="clear-filter"
+    >
+
+        <i class="fas fa-rotate-left"></i>
+
+        Clear Filter
+
+    </button>
+
+</div>
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        #
+                    </th>
+
+                    <th>
+                        Date & Time
+                    </th>
+
+                    <th>
+                        Type
+                    </th>
+
+                    <th>
+                        Converted Text
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for record in records %}
+
+
+                <tr id="history-{{ record.id }}">
+
+
+                    <!-- NUMBER -->
+
+                    <td>
+
+                        {{ loop.index }}
+
+                    </td>
+
+
+                    <!-- DATE -->
+
+                    <td class="history-date">
+
+                        <i class="fas fa-calendar"></i>
+
+                        {{ record.created_at.strftime("%d-%m-%Y %I:%M %p") }}
+
+                    </td>
+
+
+                    <!-- SOURCE -->
+
+                    <td class="history-source">
+
+                        {% if record.source == "Live Speech" %}
+
+                            <i class="fas fa-microphone"></i>
+
+                        {% elif record.source == "Upload Audio" %}
+
+                            <i class="fas fa-file-audio"></i>
+
+                        {% else %}
+
+                            <i class="fas fa-file-alt"></i>
+
+                        {% endif %}
+
+
+                        {{ record.source }}
+
+                    </td>
+
+
+                    <!-- TEXT -->
+
+                    <td class="history-text">
+
+                        {{ record.text }}
+
+                    </td>
+
+
+                    <!-- ACTION -->
+
+                    <td>
+
+                        <div class="history-action">
+
+
+                            <!-- COPY -->
+
+                            <button
+                                class="copyHistory"
+                                data-text="{{ record.text }}"
+                            >
+
+                                <i class="fas fa-copy"></i>
+
+                                Copy
+
+                            </button>
+
+
+                            <!-- DELETE -->
+
+                            <button
+                                class="deleteHistory"
+                                data-id="{{ record.id }}"
+                            >
+
+                                <i class="fas fa-trash"></i>
+
+                                Delete
+
+                            </button>
+
+
+                        </div>
+
+                    </td>
+
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+
+        <!-- =================================================
+             CLEAR ALL HISTORY
+        ================================================= -->
+
+        <div class="clear-history-container">
+
+            <button id="clearHistory">
+
+                <i class="fas fa-trash"></i>
+
+                Clear All History
+
+            </button>
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- =================================================
+             EMPTY HISTORY
+        ================================================= -->
+
+        <div class="empty-history">
+
+
+            <i class="fas fa-clock-rotate-left"></i>
+
+
+            <h2>
+
+                No History Available
+
+            </h2>
+
+
+            <p>
+
+                Your converted speech will appear here.
+
+            </p>
+
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <p>
+
+        © 2026 Speech To Text Converter | Flask Mini Project
+
+    </p>
+
+</footer>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+
+// =====================================================
+// COPY HISTORY
+// =====================================================
+
+const copyButtons =
+    document.querySelectorAll(".copyHistory");
+
+
+copyButtons.forEach(function(button) {
+
+    button.addEventListener(
+        "click",
+        function() {
+
+            const text =
+                this.getAttribute(
+                    "data-text"
+                );
+
+
+            navigator.clipboard.writeText(text)
+
+                .then(function() {
+
+                    alert(
+                        "Text copied successfully!"
+                    );
+
+                })
+
+                .catch(function() {
+
+                    alert(
+                        "Unable to copy text."
+                    );
+
+                });
+
+        }
+    );
+
+});
+
+
+// =====================================================
+// DELETE ONE HISTORY
+// =====================================================
+
+const deleteButtons =
+    document.querySelectorAll(
+        ".deleteHistory"
+    );
+
+
+deleteButtons.forEach(function(button) {
+
+    button.addEventListener(
+        "click",
+        function() {
+
+            const id =
+                this.getAttribute(
+                    "data-id"
+                );
+
+
+            if (
+                !confirm(
+                    "Are you sure you want to delete this history?"
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            fetch(
+                "/delete-history/" + id,
+                {
+                    method: "POST"
+                }
+            )
+
+            .then(function(response) {
+
+                return response.json();
+
+            })
+
+            .then(function(data) {
+
+                if (data.success) {
+
+                    location.reload();
+
+                }
+
+                else {
+
+                    alert(
+                        "Unable to delete history."
+                    );
+
+                }
+
+            })
+
+            .catch(function(error) {
+
+                console.error(error);
+
+                alert(
+                    "An error occurred."
+                );
+
+            });
+
+        }
+    );
+
+});
+
+
+// =====================================================
+// CLEAR ALL HISTORY
+// =====================================================
+
+const clearHistory =
+    document.getElementById(
+        "clearHistory"
+    );
+
+
+if (clearHistory) {
+
+    clearHistory.addEventListener(
+        "click",
+        function() {
+
+
+            if (
+                !confirm(
+                    "Are you sure you want to clear all history?"
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            fetch(
+                "/clear-history",
+                {
+                    method: "POST"
+                }
+            )
+
+            .then(function(response) {
+
+                return response.json();
+
+            })
+
+            .then(function(data) {
+
+                if (data.success) {
+
+                    location.reload();
+
+                }
+
+                else {
+
+                    alert(
+                        "Unable to clear history."
+                    );
+
+                }
+
+            })
+
+            .catch(function(error) {
+
+                console.error(error);
+
+                alert(
+                    "An error occurred."
+                );
+
+            });
+
+        }
+    );
+
+}
+// =====================================================
+// SEARCH HISTORY
+// =====================================================
+
+const historySearch =
+    document.getElementById("historySearch");
+
+const historyFilter =
+    document.getElementById("historyFilter");
+
+const clearFilter =
+    document.getElementById("clearFilter");
+
+
+function filterHistory() {
+
+    const searchText =
+        historySearch.value
+            .toLowerCase()
+            .trim();
+
+
+    const selectedType =
+        historyFilter.value;
+
+
+    const rows =
+        document.querySelectorAll(
+            ".history-table tbody tr"
+        );
+
+
+    rows.forEach(function(row) {
+
+        const rowText =
+            row.innerText.toLowerCase();
+
+
+        const sourceCell =
+            row.cells[2];
+
+
+        if (!sourceCell) {
+
+            return;
+
+        }
+
+
+        const source =
+            sourceCell.innerText.trim();
+
+
+        const matchesSearch =
+            rowText.includes(
+                searchText
+            );
+
+
+        const matchesFilter =
+            selectedType === "all" ||
+            source === selectedType;
+
+
+        if (
+            matchesSearch &&
+            matchesFilter
+        ) {
+
+            row.style.display = "";
+
+        }
+
+        else {
+
+            row.style.display = "none";
+
+        }
+
+    });
+
+}
+
+
+if (historySearch) {
+
+    historySearch.addEventListener(
+        "input",
+        filterHistory
+    );
+
+}
+
+
+if (historyFilter) {
+
+    historyFilter.addEventListener(
+        "change",
+        filterHistory
+    );
+
+}
+
+
+if (clearFilter) {
+
+    clearFilter.addEventListener(
+        "click",
+        function() {
+
+            historySearch.value = "";
+
+            historyFilter.value = "all";
+
+            filterHistory();
+
+        }
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>

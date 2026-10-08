@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>About Project</title>
+
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<nav class="navbar">
+
+    <!-- LOGO -->
+
+    <div class="logo">
+
+        <i class="fas fa-microphone-alt"></i>
+
+        Speech2Text
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <ul>
+
+        <!-- DASHBOARD -->
+
+        <li>
+
+            <a href="/dashboard">
+
+                <i class="fas fa-chart-line"></i>
+
+                Dashboard
+
+            </a>
+
+        </li>
+
+
+        <!-- HOME -->
+
+        <li>
+
+            <a href="/">
+
+                <i class="fas fa-home"></i>
+
+                Home
+
+            </a>
+
+        </li>
+
+
+        <!-- LIVE SPEECH -->
+
+        <li>
+
+            <a href="/live">
+
+                <i class="fas fa-microphone"></i>
+
+                Live Speech
+
+            </a>
+
+        </li>
+
+
+        <!-- UPLOAD AUDIO -->
+
+        <li>
+
+            <a href="/upload">
+
+                <i class="fas fa-file-audio"></i>
+
+                Upload Audio
+
+            </a>
+
+        </li>
+
+
+        <!-- TEXT TO AUDIO -->
+
+        <li>
+
+            <a href="/text-to-audio">
+
+                <i class="fas fa-volume-up"></i>
+
+                Text to Audio
+
+            </a>
+
+        </li>
+
+
+        <!-- HISTORY -->
+
+        <li>
+
+            <a href="/history">
+
+                <i class="fas fa-clock-rotate-left"></i>
+
+                History
+
+            </a>
+
+        </li>
+
+
+        <!-- PROFILE -->
+
+        <li>
+
+            <a href="/profile">
+
+                <i class="fas fa-user"></i>
+
+                Profile
+
+            </a>
+
+        </li>
+
+
+        <!-- ABOUT -->
+
+        <li>
+
+            <a href="/about">
+
+                <i class="fas fa-info-circle"></i>
+
+                About
+
+            </a>
+
+        </li>
+
+
+        <!-- CONTACT -->
+
+        <li>
+
+            <a href="/contact">
+
+                <i class="fas fa-envelope"></i>
+
+                Contact
+
+            </a>
+
+        </li>
+
+
+        <!-- LOGOUT -->
+
+        <li>
+
+            <a href="/logout">
+
+                <i class="fas fa-sign-out-alt"></i>
+
+                Logout
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</nav>
+
+<!-- =====================================================
+     ABOUT PAGE
+===================================================== -->
+
+<section class="page">
+
+
+<h1>
+
+<i class="fas fa-info-circle"></i>
+
+About Speech To Text Converter
+
+</h1>
+
+
+<p class="subtitle">
+
+A Flask-based web application that converts speech into text,
+converts text into speech, and allows users to manage their
+previous conversions through History.
+
+</p>
+
+
+<div class="cards">
+
+
+<!-- =====================================================
+     PROJECT OBJECTIVE
+===================================================== -->
+
+<div class="card">
+
+
+<i class="fas fa-bullseye"></i>
+
+
+<h2>
+
+Project Objective
+
+</h2>
+
+
+<p>
+
+The main objective of this project is to provide an easy-to-use
+platform for converting live speech and uploaded audio into text.
+The system also provides text-to-speech functionality, allowing
+users to enter or paste text and convert it into spoken audio.
+
+</p>
+
+
+</div>
+
+
+<!-- =====================================================
+     FEATURES
+===================================================== -->
+
+<div class="card">
+
+
+<i class="fas fa-star"></i>
+
+
+<h2>
+
+Features
+
+</h2>
+
+
+<ul>
+
+
+<li>
+✔ Live Speech Recognition
+</li>
+
+
+<li>
+✔ Upload Audio Files
+</li>
+
+
+<li>
+✔ Text to Audio Conversion
+</li>
+
+
+<li>
+✔ Multi-language Support
+</li>
+
+
+<li>
+✔ Copy Converted Text
+</li>
+
+
+<li>
+✔ Download Text
+</li>
+
+
+<li>
+✔ Download Speech as MP3
+</li>
+
+
+<li>
+✔ Pause and Resume Speech
+</li>
+
+
+<li>
+✔ Stop Text-to-Speech
+</li>
+
+
+<li>
+✔ Conversion History
+</li>
+
+
+<li>
+✔ Delete History Records
+</li>
+
+
+<li>
+✔ Clear All History
+</li>
+
+
+<li>
+✔ Responsive Interface
+</li>
+
+
+</ul>
+
+
+</div>
+
+
+<!-- =====================================================
+     TECHNOLOGIES USED
+===================================================== -->
+
+<div class="card">
+
+
+<i class="fas fa-laptop-code"></i>
+
+
+<h2>
+
+Technologies Used
+
+</h2>
+
+
+<ul>
+
+
+<li>
+
+Python
+
+</li>
+
+
+<li>
+
+Flask
+
+</li>
+
+
+<li>
+
+Flask-SQLAlchemy
+
+</li>
+
+
+<li>
+
+SQLite Database
+
+</li>
+
+
+<li>
+
+HTML5
+
+</li>
+
+
+<li>
+
+CSS3
+
+</li>
+
+
+<li>
+
+JavaScript
+
+</li>
+
+
+<li>
+
+Speech Recognition
+
+</li>
+
+
+<li>
+
+Google Text-to-Speech
+
+</li>
+
+
+<li>
+
+PyDub
+
+</li>
+
+
+<li>
+
+FFmpeg
+
+</li>
+
+
+</ul>
+
+
+</div>
+
+
+<!-- =====================================================
+     SPEECH TO TEXT WORKFLOW
+===================================================== -->
+
+<div class="card">
+
+
+<i class="fas fa-microphone"></i>
+
+
+<h2>
+
+Speech to Text Workflow
+
+</h2>
+
+
+<p>
+
+User selects Live Speech or Upload Audio
+
+<br><br>
+
+↓
+
+<br><br>
+
+Speech Recognition
+
+<br><br>
+
+↓
+
+<br><br>
+
+Speech Converted into Text
+
+<br><br>
+
+↓
+
+<br><br>
+
+Text Displayed to User
+
+<br><br>
+
+↓
+
+<br><br>
+
+Copy / Download / Save to History
+
+</p>
+
+
+</div>
+
+
+<!-- =====================================================
+     TEXT TO AUDIO WORKFLOW
+===================================================== -->
+
+<div class="card">
+
+
+<i class="fas fa-volume-up"></i>
+
+
+<h2>
+
+Text to Audio Workflow
+
+</h2>
+
+
+<p>
+
+User enters or pastes text
+
+<br><br>
+
+↓
+
+<br><br>
+
+Select Language
+
+<br><br>
+
+↓
+
+<br><br>
+
+Text Converted into Speech
+
+<br><br>
+
+↓
+
+<br><br>
+
+Speak / Pause / Stop
+
+<br><br>
+
+↓
+
+<br><br>
+
+Download Speech as MP3
+
+<br><br>
+
+↓
+
+<br><br>
+
+Save Text to History
+
+</p>
+
+
+</div>
+
+
+<!-- =====================================================
+     HISTORY SYSTEM
+===================================================== -->
+
+<div class="card">
+
+
+<i class="fas fa-clock-rotate-left"></i>
+
+
+<h2>
+
+History Management
+
+</h2>
+
+
+<p>
+
+The History feature stores converted content from Live Speech,
+Upload Audio, and Text to Audio.
+
+Users can view their previous conversions in a table containing
+the date, conversion type, and converted text.
+
+</p>
+
+
+<br>
+
+
+<ul>
+
+
+<li>
+
+✔ Live Speech History
+
+</li>
+
+
+<li>
+
+✔ Upload Audio History
+
+</li>
+
+
+<li>
+
+✔ Text to Audio History
+
+</li>
+
+
+<li>
+
+✔ Copy History Text
+
+</li>
+
+
+<li>
+
+✔ Delete Individual Records
+
+</li>
+
+
+<li>
+
+✔ Clear All History
+
+</li>
+
+
+</ul>
+
+
+</div>
+
+
+<!-- =====================================================
+     PROJECT WORKFLOW
+===================================================== -->
+
+<div class="card">
+
+
+<i class="fas fa-project-diagram"></i>
+
+
+<h2>
+
+Overall Workflow
+
+</h2>
+
+
+<p>
+
+User
+
+→
+
+Live Speech / Upload Audio / Text to Audio
+
+→
+
+Speech Processing
+
+→
+
+Text or Audio Output
+
+→
+
+Copy / Download
+
+→
+
+Save to History
+
+→
+
+History Management
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+
+<p>
+
+© 2026 Speech To Text Converter | Flask Mini Project
+
+</p>
+
+
+</footer>
+
+
+</body>
+
+</html>

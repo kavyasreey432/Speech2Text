@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Speech To Text Converter</title>
+
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<nav class="navbar">
+
+    <!-- LOGO -->
+
+    <div class="logo">
+
+        <i class="fas fa-microphone-alt"></i>
+
+        Speech2Text
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <ul>
+
+        <!-- DASHBOARD -->
+
+        <li>
+
+            <a href="/dashboard">
+
+                <i class="fas fa-chart-line"></i>
+
+                Dashboard
+
+            </a>
+
+        </li>
+
+
+        <!-- HOME -->
+
+        <li>
+
+            <a href="/">
+
+                <i class="fas fa-home"></i>
+
+                Home
+
+            </a>
+
+        </li>
+
+
+        <!-- LIVE SPEECH -->
+
+        <li>
+
+            <a href="/live">
+
+                <i class="fas fa-microphone"></i>
+
+                Live Speech
+
+            </a>
+
+        </li>
+
+
+        <!-- UPLOAD AUDIO -->
+
+        <li>
+
+            <a href="/upload">
+
+                <i class="fas fa-file-audio"></i>
+
+                Upload Audio
+
+            </a>
+
+        </li>
+
+
+        <!-- TEXT TO AUDIO -->
+
+        <li>
+
+            <a href="/text-to-audio">
+
+                <i class="fas fa-volume-up"></i>
+
+                Text to Audio
+
+            </a>
+
+        </li>
+
+
+        <!-- HISTORY -->
+
+        <li>
+
+            <a href="/history">
+
+                <i class="fas fa-clock-rotate-left"></i>
+
+                History
+
+            </a>
+
+        </li>
+
+
+        <!-- PROFILE -->
+
+        <li>
+
+            <a href="/profile">
+
+                <i class="fas fa-user"></i>
+
+                Profile
+
+            </a>
+
+        </li>
+
+
+        <!-- ABOUT -->
+
+        <li>
+
+            <a href="/about">
+
+                <i class="fas fa-info-circle"></i>
+
+                About
+
+            </a>
+
+        </li>
+
+
+        <!-- CONTACT -->
+
+        <li>
+
+            <a href="/contact">
+
+                <i class="fas fa-envelope"></i>
+
+                Contact
+
+            </a>
+
+        </li>
+
+
+        <!-- LOGOUT -->
+
+        <li>
+
+            <a href="/logout">
+
+                <i class="fas fa-sign-out-alt"></i>
+
+                Logout
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</nav>
+
+<!-- =====================================================
+     HERO SECTION
+===================================================== -->
+
+<section class="hero">
+
+
+    <div class="hero-text">
+
+
+        <h1>
+
+            Speech To Text Converter
+
+        </h1>
+
+
+        <p>
+
+            Convert live speech and uploaded audio into
+            accurate text using speech recognition technology.
+            You can also convert text back into speech,
+            download audio, and save your conversions in history.
+
+        </p>
+
+
+        <div class="hero-buttons">
+
+
+            <a href="/live">
+
+                <button class="btn">
+
+                    🎤 Live Speech
+
+                </button>
+
+            </a>
+
+
+            <a href="/upload">
+
+                <button class="btn">
+
+                    📁 Upload Audio
+
+                </button>
+
+            </a>
+
+
+            <a href="/text-to-audio">
+
+                <button class="btn">
+
+                    🔊 Text to Audio
+
+                </button>
+
+            </a>
+
+
+            <a href="/history">
+
+                <button class="btn">
+
+                    🕒 History
+
+                </button>
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+    <div class="hero-image">
+
+
+        <i class="fas fa-microphone-alt mic"></i>
+
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     FEATURES
+===================================================== -->
+
+<section class="features">
+
+
+    <h2>
+
+        Why Choose Our Project?
+
+    </h2>
+
+
+    <div class="cards">
+
+
+        <!-- LIVE SPEECH -->
+
+        <div class="card">
+
+
+            <i class="fas fa-microphone"></i>
+
+
+            <h3>
+
+                Live Speech
+
+            </h3>
+
+
+            <p>
+
+                Speak naturally and convert your live
+                speech into text in real time.
+
+            </p>
+
+
+        </div>
+
+
+        <!-- UPLOAD AUDIO -->
+
+        <div class="card">
+
+
+            <i class="fas fa-file-audio"></i>
+
+
+            <h3>
+
+                Upload Audio
+
+            </h3>
+
+
+            <p>
+
+                Upload supported audio files such as
+                WAV, MP3 and M4A for speech-to-text conversion.
+
+            </p>
+
+
+        </div>
+
+
+        <!-- TEXT TO AUDIO -->
+
+        <div class="card">
+
+
+            <i class="fas fa-volume-up"></i>
+
+
+            <h3>
+
+                Text to Audio
+
+            </h3>
+
+
+            <p>
+
+                Type or paste text and convert it into
+                speech using the selected language.
+
+            </p>
+
+
+        </div>
+
+
+        <!-- MULTIPLE LANGUAGES -->
+
+        <div class="card">
+
+
+            <i class="fas fa-language"></i>
+
+
+            <h3>
+
+                Multiple Languages
+
+            </h3>
+
+
+            <p>
+
+                Select from supported languages such as
+                English, Hindi and Telugu.
+
+            </p>
+
+
+        </div>
+
+
+        <!-- DOWNLOAD -->
+
+        <div class="card">
+
+
+            <i class="fas fa-download"></i>
+
+
+            <h3>
+
+                Download
+
+            </h3>
+
+
+            <p>
+
+                Download your converted text as a file
+                or download generated speech as an MP3 file.
+
+            </p>
+
+
+        </div>
+
+
+        <!-- HISTORY -->
+
+        <div class="card">
+
+
+            <i class="fas fa-clock-rotate-left"></i>
+
+
+            <h3>
+
+                History
+
+            </h3>
+
+
+            <p>
+
+                Automatically save Live Speech,
+                Upload Audio and Text to Audio conversions
+                and view them later.
+
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     WORKFLOW
+===================================================== -->
+
+<section class="workflow">
+
+
+    <h2>
+
+        How It Works
+
+    </h2>
+
+
+    <div class="steps">
+
+
+        <!-- STEP 1 -->
+
+        <div class="step">
+
+
+            <div class="number">
+
+                1
+
+            </div>
+
+
+            <h3>
+
+                Select
+
+            </h3>
+
+
+            <p>
+
+                Choose Live Speech, Upload Audio,
+                or Text to Audio.
+
+            </p>
+
+
+        </div>
+
+
+        <!-- STEP 2 -->
+
+        <div class="step">
+
+
+            <div class="number">
+
+                2
+
+            </div>
+
+
+            <h3>
+
+                Convert
+
+            </h3>
+
+
+            <p>
+
+                Convert speech into text or convert
+                text into speech.
+
+            </p>
+
+
+        </div>
+
+
+        <!-- STEP 3 -->
+
+        <div class="step">
+
+
+            <div class="number">
+
+                3
+
+            </div>
+
+
+            <h3>
+
+                Manage
+
+            </h3>
+
+
+            <p>
+
+                Copy, download, pause, stop or clear
+                your generated content.
+
+            </p>
+
+
+        </div>
+
+
+        <!-- STEP 4 -->
+
+        <div class="step">
+
+
+            <div class="number">
+
+                4
+
+            </div>
+
+
+            <h3>
+
+                History
+
+            </h3>
+
+
+            <p>
+
+                View your previous conversions in the
+                History page and manage saved records.
+
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+
+    <p>
+
+        © 2026 Speech To Text Converter
+
+    </p>
+
+
+    <p>
+
+        Developed using Flask, Python, HTML, CSS & JavaScript
+
+    </p>
+
+
+</footer>
+
+
+</body>
+
+</html>

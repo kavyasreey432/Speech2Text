@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Text to Audio</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<nav class="navbar">
+
+    <!-- LOGO -->
+
+    <div class="logo">
+
+        <i class="fas fa-microphone-alt"></i>
+
+        Speech2Text
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <ul>
+
+        <!-- DASHBOARD -->
+
+        <li>
+
+            <a href="/dashboard">
+
+                <i class="fas fa-chart-line"></i>
+
+                Dashboard
+
+            </a>
+
+        </li>
+
+
+        <!-- HOME -->
+
+        <li>
+
+            <a href="/">
+
+                <i class="fas fa-home"></i>
+
+                Home
+
+            </a>
+
+        </li>
+
+
+        <!-- LIVE SPEECH -->
+
+        <li>
+
+            <a href="/live">
+
+                <i class="fas fa-microphone"></i>
+
+                Live Speech
+
+            </a>
+
+        </li>
+
+
+        <!-- UPLOAD AUDIO -->
+
+        <li>
+
+            <a href="/upload">
+
+                <i class="fas fa-file-audio"></i>
+
+                Upload Audio
+
+            </a>
+
+        </li>
+
+
+        <!-- TEXT TO AUDIO -->
+
+        <li>
+
+            <a href="/text-to-audio">
+
+                <i class="fas fa-volume-up"></i>
+
+                Text to Audio
+
+            </a>
+
+        </li>
+
+
+        <!-- HISTORY -->
+
+        <li>
+
+            <a href="/history">
+
+                <i class="fas fa-clock-rotate-left"></i>
+
+                History
+
+            </a>
+
+        </li>
+
+
+        <!-- PROFILE -->
+
+        <li>
+
+            <a href="/profile">
+
+                <i class="fas fa-user"></i>
+
+                Profile
+
+            </a>
+
+        </li>
+
+
+        <!-- ABOUT -->
+
+        <li>
+
+            <a href="/about">
+
+                <i class="fas fa-info-circle"></i>
+
+                About
+
+            </a>
+
+        </li>
+
+
+        <!-- CONTACT -->
+
+        <li>
+
+            <a href="/contact">
+
+                <i class="fas fa-envelope"></i>
+
+                Contact
+
+            </a>
+
+        </li>
+
+
+        <!-- LOGOUT -->
+
+        <li>
+
+            <a href="/logout">
+
+                <i class="fas fa-sign-out-alt"></i>
+
+                Logout
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</nav>
+
+
+
+<!-- =====================================================
+     TEXT TO AUDIO
+===================================================== -->
+
+<section class="page">
+
+    <h1>
+
+        <i class="fas fa-volume-up"></i>
+
+        Text to Audio
+
+    </h1>
+
+
+    <p class="subtitle">
+
+        Enter or paste text and convert it into speech.
+
+    </p>
+
+
+
+    <div class="text-audio-container">
+
+
+        <!-- =================================================
+             TEXT INPUT CARD
+        ================================================= -->
+
+        <div class="text-audio-card">
+
+            <h2>
+
+                <i class="fas fa-file-alt"></i>
+
+                Enter Text
+
+            </h2>
+
+
+
+            <!-- TEXT BOX -->
+
+            <textarea
+                id="textInput"
+                placeholder="Type or paste your text here..."
+            ></textarea>
+
+
+
+            <!-- =================================================
+                 LANGUAGE
+            ================================================= -->
+
+            <label for="ttsLanguage">
+
+                Choose Language
+
+            </label>
+
+
+
+            <select id="ttsLanguage">
+
+                {% for code, name in languages.items() %}
+
+                    <option value="{{ code }}">
+
+                        {{ name }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+
+
+            <!-- =================================================
+                 BUTTONS
+            ================================================= -->
+
+            <div class="button-container">
+
+
+                <!-- SPEAK -->
+
+                <button id="speakText">
+
+                    <i class="fas fa-volume-up"></i>
+
+                    Speak Text
+
+                </button>
+
+
+
+                <!-- PAUSE -->
+
+                <button id="pauseText">
+
+                    <i class="fas fa-pause"></i>
+
+                    Pause
+
+                </button>
+
+
+
+                <!-- RESUME -->
+
+                <button id="resumeText">
+
+                    <i class="fas fa-play"></i>
+
+                    Resume
+
+                </button>
+
+
+
+                <!-- STOP -->
+
+                <button id="stopText">
+
+                    <i class="fas fa-stop"></i>
+
+                    Stop
+
+                </button>
+
+
+
+                <!-- CLEAR -->
+
+                <button id="clearText">
+
+                    <i class="fas fa-trash"></i>
+
+                    Clear
+
+                </button>
+
+
+
+                <!-- DOWNLOAD MP3 -->
+
+                <button id="downloadMP3">
+
+                    <i class="fas fa-download"></i>
+
+                    Download MP3
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <p>
+
+        © 2026 Speech To Text Converter | Flask Mini Project
+
+    </p>
+
+</footer>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+
+/* =====================================================
+   GET ELEMENTS
+===================================================== */
+
+const textInput =
+    document.getElementById("textInput");
+
+
+const ttsLanguage =
+    document.getElementById("ttsLanguage");
+
+
+const speakText =
+    document.getElementById("speakText");
+
+
+const pauseText =
+    document.getElementById("pauseText");
+
+
+const resumeText =
+    document.getElementById("resumeText");
+
+
+const stopText =
+    document.getElementById("stopText");
+
+
+const clearText =
+    document.getElementById("clearText");
+
+
+const downloadMP3 =
+    document.getElementById("downloadMP3");
+
+
+
+/* =====================================================
+   CURRENT AUDIO
+===================================================== */
+
+let currentAudio = null;
+
+
+
+/* =====================================================
+   GET SELECTED LANGUAGE
+===================================================== */
+
+function getLanguage() {
+
+    return ttsLanguage.value;
+
+}
+
+
+
+/* =====================================================
+   DETECT TEXT LANGUAGE
+===================================================== */
+
+function detectTextLanguage(text) {
+
+    /*
+       Telugu
+    */
+
+    if (/[\u0C00-\u0C7F]/.test(text)) {
+
+        return "te";
+
+    }
+
+
+    /*
+       Tamil
+    */
+
+    if (/[\u0B80-\u0BFF]/.test(text)) {
+
+        return "ta";
+
+    }
+
+
+    /*
+       Kannada
+    */
+
+    if (/[\u0C80-\u0CFF]/.test(text)) {
+
+        return "kn";
+
+    }
+
+
+    /*
+       Malayalam
+    */
+
+    if (/[\u0D00-\u0D7F]/.test(text)) {
+
+        return "ml";
+
+    }
+
+
+    /*
+       Bengali
+    */
+
+    if (/[\u0980-\u09FF]/.test(text)) {
+
+        return "bn";
+
+    }
+
+
+    /*
+       Gujarati
+    */
+
+    if (/[\u0A80-\u0AFF]/.test(text)) {
+
+        return "gu";
+
+    }
+
+
+    /*
+       Punjabi
+    */
+
+    if (/[\u0A00-\u0A7F]/.test(text)) {
+
+        return "pa";
+
+    }
+
+
+    /*
+       Odia
+    */
+
+    if (/[\u0B00-\u0B7F]/.test(text)) {
+
+        return "or";
+
+    }
+
+
+    /*
+       Hindi / Devanagari
+    */
+
+    if (/[\u0900-\u097F]/.test(text)) {
+
+        return "hi";
+
+    }
+
+
+    /*
+       Arabic
+    */
+
+    if (/[\u0600-\u06FF]/.test(text)) {
+
+        return "ar";
+
+    }
+
+
+    /*
+       Chinese
+    */
+
+    if (/[\u4E00-\u9FFF]/.test(text)) {
+
+        return "zh-CN";
+
+    }
+
+
+    /*
+       Japanese
+    */
+
+    if (/[\u3040-\u30FF]/.test(text)) {
+
+        return "ja";
+
+    }
+
+
+    /*
+       Korean
+    */
+
+    if (/[\uAC00-\uD7AF]/.test(text)) {
+
+        return "ko";
+
+    }
+
+
+    /*
+       English / Latin alphabet
+
+       If the text contains English
+       alphabet characters, treat it
+       as English.
+    */
+
+    if (/[A-Za-z]/.test(text)) {
+
+        return "en";
+
+    }
+
+
+    return null;
+
+}
+
+
+
+/* =====================================================
+   GET LANGUAGE NAME
+===================================================== */
+
+function getLanguageName(languageCode) {
+
+    const selectedOption =
+        ttsLanguage.options[
+            ttsLanguage.selectedIndex
+        ];
+
+
+    if (selectedOption) {
+
+        return selectedOption.text.trim();
+
+    }
+
+
+    return languageCode;
+
+}
+
+
+
+/* =====================================================
+   GET DETECTED LANGUAGE NAME
+===================================================== */
+
+function getDetectedLanguageName(languageCode) {
+
+    const languageNames = {
+
+        "en": "English",
+
+        "hi": "Hindi",
+
+        "te": "Telugu",
+
+        "ta": "Tamil",
+
+        "kn": "Kannada",
+
+        "ml": "Malayalam",
+
+        "bn": "Bengali",
+
+        "gu": "Gujarati",
+
+        "pa": "Punjabi",
+
+        "or": "Odia",
+
+        "ar": "Arabic",
+
+        "zh-CN": "Chinese",
+
+        "ja": "Japanese",
+
+        "ko": "Korean"
+
+    };
+
+
+    return languageNames[languageCode]
+        || languageCode;
+
+}
+
+
+
+/* =====================================================
+   CHECK LANGUAGE MATCH
+===================================================== */
+
+function checkLanguageMatch(text, selectedLanguage) {
+
+    const detectedLanguage =
+        detectTextLanguage(text);
+
+
+    /*
+       If language cannot be detected,
+       allow the audio generation.
+    */
+
+    if (!detectedLanguage) {
+
+        return true;
+
+    }
+
+
+    /*
+       Same language
+    */
+
+    if (detectedLanguage === selectedLanguage) {
+
+        return true;
+
+    }
+
+
+    /*
+       Show popup
+    */
+
+    const selectedName =
+        getLanguageName(selectedLanguage);
+
+
+    const detectedName =
+        getDetectedLanguageName(detectedLanguage);
+
+
+    alert(
+
+        "⚠️ Language Mismatch\n\n" +
+
+        "The entered text appears to be in " +
+
+        detectedName +
+
+        ", but you selected " +
+
+        selectedName +
+
+        ".\n\n" +
+
+        "Please enter text in " +
+
+        selectedName +
+
+        " or select " +
+
+        detectedName +
+
+        "."
+
+    );
+
+
+    return false;
+
+}
+
+
+
+/* =====================================================
+   SPEAK TEXT
+===================================================== */
+
+speakText.onclick = function () {
+
+
+    const text =
+        textInput.value.trim();
+
+
+
+    /* Check empty text */
+
+    if (text === "") {
+
+        alert(
+
+            "Please enter some text."
+
+        );
+
+        return;
+
+    }
+
+
+
+    /* Get selected language */
+
+    const language =
+        getLanguage();
+
+
+
+    /* =================================================
+       CHECK LANGUAGE BEFORE GENERATING AUDIO
+    ================================================= */
+
+    if (
+        !checkLanguageMatch(
+            text,
+            language
+        )
+    ) {
+
+        return;
+
+    }
+
+
+
+    /* =================================================
+       STOP PREVIOUS AUDIO
+    ================================================= */
+
+    if (currentAudio) {
+
+        currentAudio.pause();
+
+        currentAudio.currentTime = 0;
+
+        currentAudio = null;
+
+    }
+
+
+
+    /* =================================================
+       CREATE FORM DATA
+    ================================================= */
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "text",
+        text
+    );
+
+
+    formData.append(
+        "language",
+        language
+    );
+
+
+
+    /* =================================================
+       DISABLE BUTTON
+    ================================================= */
+
+    speakText.disabled = true;
+
+
+    speakText.innerHTML =
+
+        '<i class="fas fa-spinner fa-spin"></i> Generating...';
+
+
+
+    /* =================================================
+       GENERATE AUDIO
+    ================================================= */
+
+    fetch(
+
+        "/generate-audio",
+
+        {
+
+            method: "POST",
+
+            body: formData
+
+        }
+
+    )
+
+
+    .then(function (response) {
+
+
+        if (!response.ok) {
+
+            throw new Error(
+
+                "Audio generation failed."
+
+            );
+
+        }
+
+
+        return response.blob();
+
+    })
+
+
+    .then(function (blob) {
+
+
+        /* Create audio URL */
+
+        const audioURL =
+            URL.createObjectURL(blob);
+
+
+
+        /* Create audio */
+
+        currentAudio =
+            new Audio(audioURL);
+
+
+
+        /* Play audio */
+
+        currentAudio.play();
+
+
+
+        /* =================================================
+           AUDIO ENDED
+        ================================================= */
+
+        currentAudio.onended =
+            function () {
+
+
+                URL.revokeObjectURL(
+                    audioURL
+                );
+
+
+                currentAudio = null;
+
+
+            };
+
+
+
+        /* Enable button */
+
+        speakText.disabled = false;
+
+
+        speakText.innerHTML =
+
+            '<i class="fas fa-volume-up"></i> Speak Text';
+
+
+
+        /* =================================================
+           SAVE TO HISTORY
+        ================================================= */
+
+        saveTextToHistory(text);
+
+    })
+
+
+    .catch(function (error) {
+
+
+        console.error(
+
+            "TTS Error:",
+
+            error
+
+        );
+
+
+        alert(
+
+            "Unable to generate audio.\n\n" +
+
+            error.message
+
+        );
+
+
+        speakText.disabled = false;
+
+
+        speakText.innerHTML =
+
+            '<i class="fas fa-volume-up"></i> Speak Text';
+
+    });
+
+};
+
+
+
+/* =====================================================
+   SAVE TEXT TO HISTORY
+===================================================== */
+
+function saveTextToHistory(text) {
+
+
+    if (
+
+        !text ||
+
+        text.trim() === ""
+
+    ) {
+
+        return;
+
+    }
+
+
+
+    fetch(
+
+        "/save-history",
+
+        {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type":
+                    "application/json"
+
+            },
+
+
+            body: JSON.stringify({
+
+                text:
+                    text.trim(),
+
+                source:
+                    "Text to Audio"
+
+            })
+
+        }
+
+    )
+
+
+    .then(function (response) {
+
+        return response.json();
+
+    })
+
+
+    .then(function (data) {
+
+
+        if (data.success) {
+
+
+            console.log(
+
+                "Text to Audio saved to History."
+
+            );
+
+        }
+
+
+        else {
+
+
+            console.error(
+
+                "History Error:",
+
+                data.message
+
+            );
+
+        }
+
+    })
+
+
+    .catch(function (error) {
+
+
+        console.error(
+
+            "History Save Error:",
+
+            error
+
+        );
+
+    });
+
+}
+
+
+
+/* =====================================================
+   PAUSE
+===================================================== */
+
+pauseText.onclick = function () {
+
+
+    if (
+
+        currentAudio &&
+
+        !currentAudio.paused
+
+    ) {
+
+        currentAudio.pause();
+
+    }
+
+};
+
+
+
+/* =====================================================
+   RESUME
+===================================================== */
+
+resumeText.onclick = function () {
+
+
+    if (!currentAudio) {
+
+
+        alert(
+
+            "No audio is available to resume."
+
+        );
+
+
+        return;
+
+    }
+
+
+
+    if (!currentAudio.paused) {
+
+        return;
+
+    }
+
+
+
+    currentAudio.play();
+
+};
+
+
+
+/* =====================================================
+   STOP
+===================================================== */
+
+stopText.onclick = function () {
+
+
+    if (currentAudio) {
+
+
+        currentAudio.pause();
+
+
+        currentAudio.currentTime = 0;
+
+    }
+
+};
+
+
+
+/* =====================================================
+   CLEAR
+===================================================== */
+
+clearText.onclick = function () {
+
+
+    if (currentAudio) {
+
+
+        currentAudio.pause();
+
+
+        currentAudio.currentTime = 0;
+
+
+        currentAudio = null;
+
+    }
+
+
+
+    textInput.value = "";
+
+};
+
+
+
+/* =====================================================
+   DOWNLOAD MP3
+===================================================== */
+
+downloadMP3.onclick = function () {
+
+
+    const text =
+        textInput.value.trim();
+
+
+
+    /* Check empty text */
+
+    if (text === "") {
+
+
+        alert(
+
+            "Please enter some text."
+
+        );
+
+
+        return;
+
+    }
+
+
+
+    /* Get language */
+
+    const language =
+        getLanguage();
+
+
+
+    /* =================================================
+       CHECK LANGUAGE BEFORE DOWNLOAD
+    ================================================= */
+
+    if (
+
+        !checkLanguageMatch(
+
+            text,
+
+            language
+
+        )
+
+    ) {
+
+        return;
+
+    }
+
+
+
+    /* =================================================
+       CREATE FORM
+    ================================================= */
+
+    const form =
+        document.createElement("form");
+
+
+    form.method =
+        "POST";
+
+
+    form.action =
+        "/download-mp3";
+
+
+
+    /* =================================================
+       TEXT FIELD
+    ================================================= */
+
+    const textField =
+        document.createElement("input");
+
+
+    textField.type =
+        "hidden";
+
+
+    textField.name =
+        "text";
+
+
+    textField.value =
+        text;
+
+
+
+    /* =================================================
+       LANGUAGE FIELD
+    ================================================= */
+
+    const languageField =
+        document.createElement("input");
+
+
+    languageField.type =
+        "hidden";
+
+
+    languageField.name =
+        "language";
+
+
+    languageField.value =
+        language;
+
+
+
+    /* Add fields */
+
+    form.appendChild(
+        textField
+    );
+
+
+    form.appendChild(
+        languageField
+    );
+
+
+
+    /* Add form to page */
+
+    document.body.appendChild(
+        form
+    );
+
+
+
+    /* Submit */
+
+    form.submit();
+
+
+
+    /* Remove form */
+
+    document.body.removeChild(
+        form
+    );
+
+};
+
+
+
+</script>
+
+
+</body>
+
+</html>

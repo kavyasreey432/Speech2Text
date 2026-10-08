@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Edit Profile - Speech2Text</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+.edit-container {
+
+    width: 90%;
+
+    max-width: 750px;
+
+    margin: 60px auto;
+
+}
+
+
+.edit-card {
+
+    background: rgba(255,255,255,0.12);
+
+    backdrop-filter: blur(15px);
+
+    border-radius: 25px;
+
+    padding: 40px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.25);
+
+}
+
+
+.edit-card h1 {
+
+    text-align: center;
+
+    color: white;
+
+    margin-bottom: 35px;
+
+}
+
+
+.form-group {
+
+    margin-bottom: 25px;
+
+}
+
+
+.form-group label {
+
+    display: block;
+
+    color: white;
+
+    font-weight: 600;
+
+    font-size: 16px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.form-group input {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    font-size: 16px;
+
+    outline: none;
+
+}
+
+
+.form-group input:disabled {
+
+    background: #e5e7eb;
+
+    color: #555;
+
+}
+
+
+.form-buttons {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    margin-top: 30px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.form-button {
+
+    border: none;
+
+    padding: 14px 25px;
+
+    border-radius: 25px;
+
+    color: white;
+
+    background: #38bdf8;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    transition: 0.3s;
+
+}
+
+
+.form-button:hover {
+
+    background: #0284c7;
+
+    transform: translateY(-2px);
+
+}
+
+
+.cancel-button {
+
+    background: #64748b;
+
+}
+
+
+.cancel-button:hover {
+
+    background: #475569;
+
+}
+
+
+.error-message {
+
+    padding: 13px;
+
+    margin-bottom: 20px;
+
+    border-radius: 10px;
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+    text-align: center;
+
+    font-weight: 600;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     LEFT SIDEBAR
+===================================================== -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <i class="fas fa-microphone-alt"></i>
+
+        Speech2Text
+
+    </div>
+
+
+    <ul>
+
+        <li>
+
+            <a href="/">
+
+                <i class="fas fa-home"></i>
+
+                Home
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="/live">
+
+                <i class="fas fa-microphone"></i>
+
+                Live Speech
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="/upload">
+
+                <i class="fas fa-file-audio"></i>
+
+                Upload Audio
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="/text-to-audio">
+
+                <i class="fas fa-volume-up"></i>
+
+                Text to Audio
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="/history">
+
+                <i class="fas fa-clock-rotate-left"></i>
+
+                History
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a class="active"
+               href="/profile">
+
+                <i class="fas fa-user"></i>
+
+                Profile
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="/about">
+
+                <i class="fas fa-info-circle"></i>
+
+                About
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="/contact">
+
+                <i class="fas fa-envelope"></i>
+
+                Contact
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="/logout">
+
+                <i class="fas fa-sign-out-alt"></i>
+
+                Logout
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- =====================================================
+     EDIT PROFILE
+===================================================== -->
+
+<section class="edit-container">
+
+
+<div class="edit-card">
+
+
+<h1>
+
+    <i class="fas fa-user-pen"></i>
+
+    Edit Profile
+
+</h1>
+
+
+{% if error %}
+
+<div class="error-message">
+
+    <i class="fas fa-circle-exclamation"></i>
+
+    {{ error }}
+
+</div>
+
+{% endif %}
+
+
+<form
+    action="/edit-profile"
+    method="POST"
+>
+
+
+<!-- NAME -->
+
+<div class="form-group">
+
+    <label for="name">
+
+        <i class="fas fa-user"></i>
+
+        Name
+
+    </label>
+
+
+    <input
+        type="text"
+        id="name"
+        name="name"
+        value="{{ user.name }}"
+        placeholder="Enter your name"
+        required
+    >
+
+</div>
+
+
+<!-- EMAIL -->
+
+<div class="form-group">
+
+    <label for="email">
+
+        <i class="fas fa-envelope"></i>
+
+        Email
+
+    </label>
+
+
+    <input
+        type="email"
+        id="email"
+        value="{{ user.email }}"
+        disabled
+    >
+
+</div>
+
+
+<!-- BUTTONS -->
+
+<div class="form-buttons">
+
+
+<button
+    type="submit"
+    class="form-button"
+>
+
+    <i class="fas fa-save"></i>
+
+    Save Changes
+
+</button>
+
+
+<a
+    href="/profile"
+    class="form-button cancel-button"
+>
+
+    <i class="fas fa-arrow-left"></i>
+
+    Cancel
+
+</a>
+
+
+</div>
+
+
+</form>
+
+
+</div>
+
+</section>
+
+
+<footer>
+
+<p>
+
+© 2026 Speech To Text Converter |
+
+Flask Mini Project
+
+</p>
+
+</footer>
+
+
+</body>
+
+</html>

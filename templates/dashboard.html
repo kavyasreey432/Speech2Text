@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard - Speech2Text</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+<style>
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+.dashboard-container {
+
+    width: 90%;
+
+    max-width: 1100px;
+
+    margin: 40px auto;
+
+}
+
+
+/* =====================================================
+   WELCOME
+===================================================== */
+
+.dashboard-welcome {
+
+    margin-bottom: 30px;
+
+}
+
+
+.dashboard-welcome h1 {
+
+    color: white;
+
+    font-size: 32px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.dashboard-welcome p {
+
+    color: #e5e7eb;
+
+    font-size: 17px;
+
+}
+
+
+/* =====================================================
+   STAT CARDS
+===================================================== */
+
+.dashboard-stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+
+}
+
+
+.dashboard-stat {
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,0.12);
+
+    backdrop-filter: blur(12px);
+
+    text-align: center;
+
+    color: white;
+
+    transition: 0.3s;
+
+}
+
+
+.dashboard-stat:hover {
+
+    transform: translateY(-5px);
+
+    background:
+        rgba(255,255,255,0.18);
+
+}
+
+
+.dashboard-stat i {
+
+    font-size: 30px;
+
+    color: #38bdf8;
+
+    margin-bottom: 12px;
+
+}
+
+
+.dashboard-stat-number {
+
+    display: block;
+
+    font-size: 30px;
+
+    font-weight: 700;
+
+}
+
+
+.dashboard-stat-title {
+
+    color: #e5e7eb;
+
+}
+
+
+/* =====================================================
+   RECENT HISTORY
+===================================================== */
+
+.dashboard-history {
+
+    margin-top: 35px;
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,0.12);
+
+    backdrop-filter: blur(12px);
+
+}
+
+
+.dashboard-history h2 {
+
+    color: white;
+
+    margin-top: 0;
+
+}
+
+
+.dashboard-table-container {
+
+    overflow-x: auto;
+
+}
+
+
+.dashboard-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+
+.dashboard-table th,
+.dashboard-table td {
+
+    padding: 13px;
+
+    text-align: center;
+
+    border-bottom:
+        1px solid rgba(255,255,255,0.15);
+
+}
+
+
+.dashboard-table th {
+
+    color: white;
+
+    background: #6d28d9;
+
+}
+
+
+.dashboard-table td {
+
+    color: #f1f5f9;
+
+}
+
+
+.dashboard-text {
+
+    max-width: 400px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+}
+
+
+/* =====================================================
+   QUICK ACTIONS
+===================================================== */
+
+.dashboard-actions {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    margin-top: 30px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.dashboard-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 13px 22px;
+
+    border-radius: 25px;
+
+    color: white;
+
+    background: #38bdf8;
+
+    text-decoration: none;
+
+    font-weight: 600;
+
+    transition: 0.3s;
+
+}
+
+
+.dashboard-button:hover {
+
+    background: #0284c7;
+
+    transform: translateY(-2px);
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width: 900px) {
+
+    .dashboard-stats {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+
+@media(max-width: 600px) {
+
+    .dashboard-container {
+
+        width: 92%;
+
+    }
+
+    .dashboard-stats {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<nav class="navbar">
+
+    <!-- LOGO -->
+
+    <div class="logo">
+
+        <i class="fas fa-microphone-alt"></i>
+
+        Speech2Text
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <ul>
+
+        <!-- DASHBOARD -->
+
+        <li>
+
+            <a href="/dashboard">
+
+                <i class="fas fa-chart-line"></i>
+
+                Dashboard
+
+            </a>
+
+        </li>
+
+
+        <!-- HOME -->
+
+        <li>
+
+            <a href="/">
+
+                <i class="fas fa-home"></i>
+
+                Home
+
+            </a>
+
+        </li>
+
+
+        <!-- LIVE SPEECH -->
+
+        <li>
+
+            <a href="/live">
+
+                <i class="fas fa-microphone"></i>
+
+                Live Speech
+
+            </a>
+
+        </li>
+
+
+        <!-- UPLOAD AUDIO -->
+
+        <li>
+
+            <a href="/upload">
+
+                <i class="fas fa-file-audio"></i>
+
+                Upload Audio
+
+            </a>
+
+        </li>
+
+
+        <!-- TEXT TO AUDIO -->
+
+        <li>
+
+            <a href="/text-to-audio">
+
+                <i class="fas fa-volume-up"></i>
+
+                Text to Audio
+
+            </a>
+
+        </li>
+
+
+        <!-- HISTORY -->
+
+        <li>
+
+            <a href="/history">
+
+                <i class="fas fa-clock-rotate-left"></i>
+
+                History
+
+            </a>
+
+        </li>
+
+
+        <!-- PROFILE -->
+
+        <li>
+
+            <a href="/profile">
+
+                <i class="fas fa-user"></i>
+
+                Profile
+
+            </a>
+
+        </li>
+
+
+        <!-- ABOUT -->
+
+        <li>
+
+            <a href="/about">
+
+                <i class="fas fa-info-circle"></i>
+
+                About
+
+            </a>
+
+        </li>
+
+
+        <!-- CONTACT -->
+
+        <li>
+
+            <a href="/contact">
+
+                <i class="fas fa-envelope"></i>
+
+                Contact
+
+            </a>
+
+        </li>
+
+
+        <!-- LOGOUT -->
+
+        <li>
+
+            <a href="/logout">
+
+                <i class="fas fa-sign-out-alt"></i>
+
+                Logout
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</nav>
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<section class="dashboard-container">
+
+
+<div class="dashboard-welcome">
+
+    <h1>
+
+        Welcome, {{ user.name }} 👋
+
+    </h1>
+
+    <p>
+
+        Here's an overview of your Speech2Text activity.
+
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     STATISTICS
+===================================================== -->
+
+<div class="dashboard-stats">
+
+
+<div class="dashboard-stat">
+
+    <i class="fas fa-file-lines"></i>
+
+    <span class="dashboard-stat-number">
+
+        {{ total_conversions }}
+
+    </span>
+
+    <span class="dashboard-stat-title">
+
+        Total Conversions
+
+    </span>
+
+</div>
+
+
+<div class="dashboard-stat">
+
+    <i class="fas fa-microphone"></i>
+
+    <span class="dashboard-stat-number">
+
+        {{ live_count }}
+
+    </span>
+
+    <span class="dashboard-stat-title">
+
+        Live Speech
+
+    </span>
+
+</div>
+
+
+<div class="dashboard-stat">
+
+    <i class="fas fa-file-audio"></i>
+
+    <span class="dashboard-stat-number">
+
+        {{ upload_count }}
+
+    </span>
+
+    <span class="dashboard-stat-title">
+
+        Uploaded Audio
+
+    </span>
+
+</div>
+
+
+<div class="dashboard-stat">
+
+    <i class="fas fa-volume-up"></i>
+
+    <span class="dashboard-stat-number">
+
+        {{ text_audio_count }}
+
+    </span>
+
+    <span class="dashboard-stat-title">
+
+        Text to Audio
+
+    </span>
+
+</div>
+
+
+</div>
+
+
+<!-- =====================================================
+     RECENT HISTORY
+===================================================== -->
+
+<div class="dashboard-history">
+
+    <h2>
+
+        <i class="fas fa-clock-rotate-left"></i>
+
+        Recent Activity
+
+    </h2>
+
+
+    <div class="dashboard-table-container">
+
+        <table class="dashboard-table">
+
+            <tr>
+
+                <th>Source</th>
+
+                <th>Converted Text</th>
+
+                <th>Date & Time</th>
+
+            </tr>
+
+
+            {% for record in recent_records %}
+
+            <tr>
+
+                <td>
+
+                    {{ record.source }}
+
+                </td>
+
+
+                <td class="dashboard-text">
+
+                    {{ record.text }}
+
+                </td>
+
+
+                <td>
+
+                    {{ record.created_at }}
+
+                </td>
+
+            </tr>
+
+
+            {% else %}
+
+            <tr>
+
+                <td colspan="3">
+
+                    No conversions yet.
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     QUICK ACTIONS
+===================================================== -->
+
+<div class="dashboard-actions">
+
+
+<a
+    href="/live"
+    class="dashboard-button"
+>
+
+    <i class="fas fa-microphone"></i>
+
+    Start Live Speech
+
+</a>
+
+
+<a
+    href="/upload"
+    class="dashboard-button"
+>
+
+    <i class="fas fa-upload"></i>
+
+    Upload Audio
+
+</a>
+
+
+<a
+    href="/profile"
+    class="dashboard-button"
+>
+
+    <i class="fas fa-user"></i>
+
+    My Profile
+
+</a>
+
+
+</div>
+
+
+</section>
+
+
+<footer>
+
+<p>
+
+© 2026 Speech To Text Converter |
+Flask Mini Project
+
+</p>
+
+</footer>
+
+
+</body>
+
+</html>

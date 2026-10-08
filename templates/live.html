@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Live Speech Recognition</title>
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<nav class="navbar">
+
+    <!-- LOGO -->
+
+    <div class="logo">
+
+        <i class="fas fa-microphone-alt"></i>
+
+        Speech2Text
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <ul>
+
+        <!-- DASHBOARD -->
+
+        <li>
+
+            <a href="/dashboard">
+
+                <i class="fas fa-chart-line"></i>
+
+                Dashboard
+
+            </a>
+
+        </li>
+
+
+        <!-- HOME -->
+
+        <li>
+
+            <a href="/">
+
+                <i class="fas fa-home"></i>
+
+                Home
+
+            </a>
+
+        </li>
+
+
+        <!-- LIVE SPEECH -->
+
+        <li>
+
+            <a href="/live">
+
+                <i class="fas fa-microphone"></i>
+
+                Live Speech
+
+            </a>
+
+        </li>
+
+
+        <!-- UPLOAD AUDIO -->
+
+        <li>
+
+            <a href="/upload">
+
+                <i class="fas fa-file-audio"></i>
+
+                Upload Audio
+
+            </a>
+
+        </li>
+
+
+        <!-- TEXT TO AUDIO -->
+
+        <li>
+
+            <a href="/text-to-audio">
+
+                <i class="fas fa-volume-up"></i>
+
+                Text to Audio
+
+            </a>
+
+        </li>
+
+
+        <!-- HISTORY -->
+
+        <li>
+
+            <a href="/history">
+
+                <i class="fas fa-clock-rotate-left"></i>
+
+                History
+
+            </a>
+
+        </li>
+
+
+        <!-- PROFILE -->
+
+        <li>
+
+            <a href="/profile">
+
+                <i class="fas fa-user"></i>
+
+                Profile
+
+            </a>
+
+        </li>
+
+
+        <!-- ABOUT -->
+
+        <li>
+
+            <a href="/about">
+
+                <i class="fas fa-info-circle"></i>
+
+                About
+
+            </a>
+
+        </li>
+
+
+        <!-- CONTACT -->
+
+        <li>
+
+            <a href="/contact">
+
+                <i class="fas fa-envelope"></i>
+
+                Contact
+
+            </a>
+
+        </li>
+
+
+        <!-- LOGOUT -->
+
+        <li>
+
+            <a href="/logout">
+
+                <i class="fas fa-sign-out-alt"></i>
+
+                Logout
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- =====================================================
+     LIVE SPEECH
+===================================================== -->
+
+<section class="page">
+
+    <h1>
+
+        <i class="fas fa-microphone"></i>
+
+        Live Speech Recognition
+
+    </h1>
+
+
+    <p class="subtitle">
+
+        Speak into your microphone and your speech will
+        automatically appear below.
+
+    </p>
+
+
+    <div class="live-container">
+
+
+        <!-- LANGUAGE -->
+
+        <div class="language-container">
+
+            <label for="language">
+
+                Choose Language
+
+            </label>
+
+            <select id="language">
+
+                <option value="en-IN">
+                    English (India)
+                </option>
+
+                <option value="en-US">
+                    English (US)
+                </option>
+
+                <option value="en-GB">
+                    English (UK)
+                </option>
+
+                <option value="hi-IN">
+                    Hindi
+                </option>
+
+                <option value="te-IN">
+                    Telugu
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div id="status">
+
+            🔴 Ready to Record
+
+        </div>
+
+
+        <!-- OUTPUT -->
+
+        <textarea
+            id="output"
+            placeholder="Your speech will automatically appear here..."
+            ></textarea>
+
+
+        <!-- RECORDING BUTTONS -->
+
+        <div class="button-container">
+
+            <button id="start">
+
+                <i class="fas fa-microphone"></i>
+
+                Start Recording
+
+            </button>
+
+
+            <button id="stop">
+
+                <i class="fas fa-stop"></i>
+
+                Stop Recording
+
+            </button>
+
+        </div>
+
+
+        <!-- TEXT BUTTONS -->
+
+        <div class="button-container">
+
+            <button id="copy">
+
+                <i class="fas fa-copy"></i>
+
+                Copy
+
+            </button>
+
+
+            <button id="download">
+
+                <i class="fas fa-download"></i>
+
+                Download
+
+            </button>
+
+
+            <button id="clear">
+
+                <i class="fas fa-trash"></i>
+
+                Clear
+
+            </button>
+            
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <p>
+
+        © 2026 Speech To Text Converter | Flask Mini Project
+
+    </p>
+
+</footer>
+
+
+<script>
+
+
+// =====================================================
+// SPEECH RECOGNITION
+// =====================================================
+
+const output = document.getElementById("output");
+
+const status = document.getElementById("status");
+
+const language = document.getElementById("language");
+
+const startButton = document.getElementById("start");
+
+const stopButton = document.getElementById("stop");
+
+const copyButton = document.getElementById("copy");
+
+const downloadButton = document.getElementById("download");
+
+const clearButton = document.getElementById("clear");
+
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+let recognition;
+
+let isRecording = false;
+
+let finalTranscript = "";
+
+
+// =====================================================
+// BROWSER SUPPORT
+// =====================================================
+
+if (!SpeechRecognition) {
+
+    alert(
+        "Speech Recognition is not supported in this browser.\n" +
+        "Please use Google Chrome."
+    );
+
+}
+
+
+// =====================================================
+// CREATE SPEECH RECOGNITION
+// =====================================================
+
+else {
+
+    recognition = new SpeechRecognition();
+
+    recognition.continuous = true;
+
+    recognition.interimResults = true;
+
+
+    // =================================================
+    // START
+    // =================================================
+
+    startButton.onclick = function () {
+
+        if (isRecording) {
+
+            return;
+
+        }
+
+
+        finalTranscript = "";
+
+        output.value = "";
+
+        recognition.lang = language.value;
+
+
+        try {
+
+            recognition.start();
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+
+    // =================================================
+    // STOP
+    // =================================================
+
+    stopButton.onclick = function () {
+
+        if (!isRecording) {
+
+            return;
+
+        }
+
+        recognition.stop();
+
+    };
+
+
+    // =================================================
+    // ON START
+    // =================================================
+
+    recognition.onstart = function () {
+
+        isRecording = true;
+
+        status.innerHTML = "🟢 Recording...";
+
+        status.style.color = "green";
+
+    };
+
+
+    // =================================================
+    // SPEECH RESULT
+    // =================================================
+
+    recognition.onresult = function (event) {
+
+        let interimTranscript = "";
+
+
+        for (
+            let i = event.resultIndex;
+            i < event.results.length;
+            i++
+        ) {
+
+            let transcript =
+                event.results[i][0].transcript;
+
+
+            if (event.results[i].isFinal) {
+
+                finalTranscript +=
+                    transcript + " ";
+
+            }
+
+            else {
+
+                interimTranscript += transcript;
+
+            }
+
+        }
+
+
+        // Show speech immediately
+        output.value =
+            finalTranscript + interimTranscript;
+
+    };
+
+
+   // =================================================
+// RECORDING ENDED
+// =================================================
+
+recognition.onend = async function () {
+
+    isRecording = false;
+
+
+    // ---------------------------------------------
+    // NO SPEECH
+    // ---------------------------------------------
+
+    if (finalTranscript.trim() === "") {
+
+        status.innerHTML =
+            "⏹ Recording Stopped";
+
+        status.style.color = "red";
+
+        return;
+    }
+
+
+    // ---------------------------------------------
+    // PUNCTUATION PROCESSING
+    // ---------------------------------------------
+
+    status.innerHTML =
+        "⏳ Adding punctuation...";
+
+    status.style.color = "orange";
+
+
+    try {
+
+        // Send text to Flask
+
+        const response = await fetch(
+            "/punctuate",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    text:
+                        finalTranscript.trim()
+
+                })
+            }
+        );
+
+
+        const data =
+            await response.json();
+
+
+        // -----------------------------------------
+        // DISPLAY PUNCTUATED TEXT
+        // -----------------------------------------
+
+        if (data.text) {
+
+            output.value =
+                data.text;
+
+
+            // -------------------------------------
+            // SAVE TO HISTORY
+            // -------------------------------------
+
+            saveToHistory(
+                data.text,
+                "Live Speech"
+            );
+
+        }
+
+
+        status.innerHTML =
+            "⏹ Recording Stopped";
+
+        status.style.color =
+            "red";
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Punctuation Error:",
+            error
+        );
+
+
+        // -----------------------------------------
+        // IF PUNCTUATION FAILS
+        // -----------------------------------------
+
+        output.value =
+            finalTranscript.trim();
+
+
+        // Save original text
+
+        saveToHistory(
+            finalTranscript.trim(),
+            "Live Speech"
+        );
+
+
+        status.innerHTML =
+            "⏹ Recording Stopped";
+
+        status.style.color =
+            "red";
+
+    }
+
+};
+
+
+// =================================================
+// SPEECH RECOGNITION ERROR
+// =================================================
+
+recognition.onerror = function (event) {
+
+    console.log(
+        "Speech Recognition Error:",
+        event.error
+    );
+
+
+    isRecording = false;
+
+
+    status.innerHTML =
+        "❌ Error: " +
+        event.error;
+
+
+    status.style.color =
+        "red";
+
+};
+
+
+// =================================================
+// CLOSE SPEECH RECOGNITION ELSE BLOCK
+// =================================================
+
+}
+
+
+// =====================================================
+// SAVE TO HISTORY
+// =====================================================
+
+function saveToHistory(text, source) {
+
+    if (
+        !text ||
+        text.trim() === ""
+    ) {
+
+        return;
+
+    }
+
+
+    fetch(
+        "/save-history",
+        {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type":
+                    "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                text:
+                    text.trim(),
+
+                source:
+                    source
+
+            })
+
+        }
+    )
+
+    .then(
+        response =>
+            response.json()
+    )
+
+    .then(
+        data => {
+
+            if (data.success) {
+
+                console.log(
+                    "Saved to history successfully."
+                );
+
+            }
+
+            else {
+
+                console.log(
+                    "History Error:",
+                    data.message
+                );
+
+            }
+
+        }
+    )
+
+    .catch(
+        error => {
+
+            console.error(
+                "History Error:",
+                error
+            );
+
+        }
+    );
+
+}
+// =====================================================
+// COPY
+// =====================================================
+
+copyButton.onclick = function () {
+
+    if (output.value.trim() === "") {
+
+        alert("Nothing to copy.");
+
+        return;
+
+    }
+
+
+    navigator.clipboard.writeText(
+        output.value
+    );
+
+
+    alert("Copied Successfully.");
+
+};
+
+
+// =====================================================
+// DOWNLOAD
+// =====================================================
+
+downloadButton.onclick = function () {
+
+    if (output.value.trim() === "") {
+
+        alert("Nothing to download.");
+
+        return;
+
+    }
+
+
+    const blob = new Blob(
+        [output.value],
+        {
+            type: "text/plain"
+        }
+    );
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href =
+        URL.createObjectURL(blob);
+
+
+    link.download =
+        "LiveSpeechText.txt";
+
+
+    link.click();
+
+};
+
+
+// =====================================================
+// CLEAR
+// =====================================================
+
+clearButton.onclick = function () {
+
+    // Completely stop speech
+    window.speechSynthesis.cancel();
+
+    // Remove current speech object
+    currentSpeech = null;
+
+    // Clear text
+    output.value = "";
+
+    finalTranscript = "";
+
+    // Reset status
+    status.innerHTML = "🔴 Ready to Record";
+
+};
+
+</script>
+
+
+</body>
+
+</html>

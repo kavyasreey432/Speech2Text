@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Upload Audio</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <!-- LOGO -->
+
+    <div class="logo">
+
+        <i class="fas fa-microphone-alt"></i>
+
+        Speech2Text
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <ul>
+
+        <!-- DASHBOARD -->
+
+        <li>
+            <a href="/dashboard">
+                <i class="fas fa-chart-line"></i>
+                Dashboard
+            </a>
+        </li>
+
+
+        <!-- HOME -->
+
+        <li>
+            <a href="/">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+        </li>
+
+
+        <!-- LIVE SPEECH -->
+
+        <li>
+            <a href="/live">
+                <i class="fas fa-microphone"></i>
+                Live Speech
+            </a>
+        </li>
+
+
+        <!-- UPLOAD AUDIO -->
+
+        <li>
+            <a href="/upload">
+                <i class="fas fa-file-audio"></i>
+                Upload Audio
+            </a>
+        </li>
+
+
+        <!-- TEXT TO AUDIO -->
+
+        <li>
+            <a href="/text-to-audio">
+                <i class="fas fa-volume-up"></i>
+                Text to Audio
+            </a>
+        </li>
+
+
+        <!-- HISTORY -->
+
+        <li>
+            <a href="/history">
+                <i class="fas fa-clock-rotate-left"></i>
+                History
+            </a>
+        </li>
+
+
+        <!-- PROFILE -->
+
+        <li>
+            <a href="/profile">
+                <i class="fas fa-user"></i>
+                Profile
+            </a>
+        </li>
+
+
+        <!-- ABOUT -->
+
+        <li>
+            <a href="/about">
+                <i class="fas fa-info-circle"></i>
+                About
+            </a>
+        </li>
+
+
+        <!-- CONTACT -->
+
+        <li>
+            <a href="/contact">
+                <i class="fas fa-envelope"></i>
+                Contact
+            </a>
+        </li>
+
+
+        <!-- LOGOUT -->
+
+        <li>
+            <a href="/logout">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<section class="page">
+
+    <h1>
+
+        <i class="fas fa-file-audio"></i>
+
+        Upload Audio File
+
+    </h1>
+
+    <p class="subtitle">
+
+        Upload an audio file and convert it into text.
+
+    </p>
+
+
+    <!-- UPLOAD CARD -->
+
+    <div class="upload-card">
+
+        <div class="upload-icon">
+
+            <i class="fas fa-cloud-upload-alt"></i>
+
+        </div>
+
+        <h2>Select Audio File</h2>
+
+
+        <input
+
+            type="file"
+
+            id="audioFile"
+
+            accept=".wav,.mp3,.m4a,.aac,.ogg,.flac"
+
+        >
+
+
+        <p id="fileName">
+
+            No file selected
+
+        </p>
+
+
+        <div class="button-container">
+
+            <button onclick="uploadAudio()">
+
+                <i class="fas fa-upload"></i>
+
+                Upload & Convert
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- AUDIO PLAYBACK CARD -->
+
+    <div class="result-card" id="audioPlayerCard" style="display: none;">
+
+        <h2>
+
+            <i class="fas fa-headphones"></i>
+
+            Audio Playback
+
+        </h2>
+
+
+        <p id="audioPlayerName">
+
+            Selected Audio
+
+        </p>
+
+
+        <audio
+
+            id="audioPlayer"
+
+            controls
+
+            style="width: 100%;"
+
+        >
+
+            Your browser does not support audio playback.
+
+        </audio>
+
+
+    </div>
+
+
+    <!-- CONVERTED TEXT CARD -->
+
+    <div class="result-card">
+
+        <h2>
+
+            <i class="fas fa-file-alt"></i>
+
+            Converted Text
+
+        </h2>
+
+
+        <textarea
+
+            id="output"
+
+            placeholder="Converted text will appear here..."
+
+        ></textarea>
+
+
+        <p id="counter">
+
+            Words : 0 | Characters : 0
+
+        </p>
+
+
+        <div class="button-container">
+
+            <button onclick="copyText()">
+
+                <i class="fas fa-copy"></i>
+
+                Copy
+
+            </button>
+
+
+            <button onclick="downloadText()">
+
+                <i class="fas fa-download"></i>
+
+                Download
+
+            </button>
+
+
+            <button onclick="clearText()">
+
+                <i class="fas fa-trash"></i>
+
+                Clear
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>
+
+        © 2026 Speech To Text Converter
+
+    </p>
+
+    <p>
+
+        Developed using Flask • Python • HTML • CSS • JavaScript
+
+    </p>
+
+</footer>
+
+
+<script>
+
+/* ==========================================
+   FILE SELECTION
+   ========================================== */
+
+document.getElementById("audioFile").addEventListener("change", function () {
+
+    if (this.files.length > 0) {
+
+        const file = this.files[0];
+
+        document.getElementById("fileName").innerHTML =
+            "Selected : " + file.name;
+
+
+        /* ==========================================
+           AUDIO PLAYBACK
+           ========================================== */
+
+        const audioPlayer = document.getElementById("audioPlayer");
+
+        const audioPlayerCard = document.getElementById("audioPlayerCard");
+
+        const audioPlayerName = document.getElementById("audioPlayerName");
+
+
+        /* Create temporary URL for selected audio */
+
+        const audioURL = URL.createObjectURL(file);
+
+
+        /* Give audio file to player */
+
+        audioPlayer.src = audioURL;
+
+
+        /* Show file name */
+
+        audioPlayerName.innerHTML =
+            "<i class='fas fa-music'></i> " + file.name;
+
+
+        /* Show audio player */
+
+        audioPlayerCard.style.display = "block";
+
+    }
+
+});
+
+
+/* ==========================================
+   CLEAR AUDIO PLAYER
+   ========================================== */
+
+function clearAudioPlayer() {
+
+    const audioPlayer = document.getElementById("audioPlayer");
+
+    const audioPlayerCard = document.getElementById("audioPlayerCard");
+
+
+    audioPlayer.pause();
+
+    audioPlayer.currentTime = 0;
+
+    audioPlayer.removeAttribute("src");
+
+    audioPlayer.load();
+
+    audioPlayerCard.style.display = "none";
+
+}
+
+</script>
+
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>

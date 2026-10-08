@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Login - Speech2Text</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <i class="fas fa-microphone-alt"></i>
+
+        Speech2Text
+
+    </div>
+
+</nav>
+
+
+<section class="login-page">
+
+    <div class="login-card">
+
+        <div class="login-icon">
+
+            <i class="fas fa-user-circle"></i>
+
+        </div>
+
+
+        <h1>Login</h1>
+
+
+        <p class="login-subtitle">
+
+            Login to access your Speech2Text account
+
+        </p>
+
+
+        {% if error %}
+
+        <div class="login-message">
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+        <form action="/login"
+              method="POST">
+
+
+            <div class="login-group">
+
+                <label for="email">
+
+                    <i class="fas fa-envelope"></i>
+
+                    Email
+
+                </label>
+
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="login-input"
+                    placeholder="Enter your email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="login-group">
+
+                <label for="password">
+
+                    <i class="fas fa-lock"></i>
+
+                    Password
+
+                </label>
+
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="login-input"
+                    placeholder="Enter your password"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button"
+            >
+
+                <i class="fas fa-sign-in-alt"></i>
+
+                Login
+
+            </button>
+
+
+        </form>
+
+
+        <div class="login-footer">
+
+            <p>
+
+                Don't have an account?
+
+                <a href="/register">
+
+                    Register
+
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>
+
+        © 2026 Speech To Text Converter |
+        Flask Mini Project
+
+    </p>
+
+</footer>
+
+</body>
+
+</html>

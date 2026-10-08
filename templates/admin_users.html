@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Admin Users - Speech2Text</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+<style>
+
+.admin-container {
+
+    width: 90%;
+
+    max-width: 1200px;
+
+    margin: 40px auto;
+
+}
+
+
+.admin-title {
+
+    text-align: center;
+
+    margin-bottom: 35px;
+
+}
+
+
+.admin-navigation {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    margin-bottom: 35px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.admin-navigation a {
+
+    text-decoration: none;
+
+    color: white;
+
+    background: #38bdf8;
+
+    padding: 12px 22px;
+
+    border-radius: 25px;
+
+    font-weight: 600;
+
+    transition: 0.3s;
+
+}
+
+
+.admin-navigation a:hover {
+
+    background: #0ea5e9;
+
+    transform: translateY(-2px);
+
+}
+
+
+.admin-navigation a.active {
+
+    background: #0284c7;
+
+}
+
+
+.admin-table-container {
+
+    overflow-x: auto;
+
+}
+
+
+.admin-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+
+.admin-table th,
+.admin-table td {
+
+    padding: 14px;
+
+    border: 1px solid #ddd;
+
+    text-align: center;
+
+}
+
+
+.admin-table th {
+
+    background: #6d28d9;
+
+    color: white;
+
+}
+
+
+.admin-table tr:nth-child(even) {
+
+    background: rgba(255,255,255,0.08);
+
+}
+
+
+.admin-badge {
+
+    display: inline-block;
+
+    padding: 5px 12px;
+
+    border-radius: 20px;
+
+}
+
+
+.admin-badge-user {
+
+    background: #2563eb;
+
+    color: white;
+
+}
+
+
+.admin-badge-admin {
+
+    background: #dc2626;
+
+    color: white;
+
+}
+
+
+.admin-logout {
+
+    display: block;
+
+    width: fit-content;
+
+    margin: 30px auto;
+
+    padding: 12px 25px;
+
+    background: #dc2626;
+
+    color: white;
+
+    text-decoration: none;
+
+    border-radius: 25px;
+
+}
+
+
+.admin-logout:hover {
+
+    background: #b91c1c;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     ADMIN NAVIGATION
+===================================================== -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <i class="fas fa-microphone-alt"></i>
+
+        Speech2Text
+
+    </div>
+
+
+    <ul>
+
+        <li>
+
+            <a class="active"
+               href="/admin/users">
+
+                <i class="fas fa-users"></i>
+
+                Users
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="/admin/history">
+
+                <i class="fas fa-clock-rotate-left"></i>
+
+                History
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="/logout">
+
+                <i class="fas fa-sign-out-alt"></i>
+
+                Logout
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<section class="admin-container">
+
+
+<h1 class="admin-title">
+
+    <i class="fas fa-user-shield"></i>
+
+    Registered Users
+
+</h1>
+
+
+<div class="admin-table-container">
+
+
+<table class="admin-table">
+
+
+<tr>
+
+    <th>ID</th>
+
+    <th>Name</th>
+
+    <th>Email</th>
+
+    <th>Role</th>
+
+    <th>Created</th>
+
+</tr>
+
+
+{% for user in users %}
+
+
+<tr>
+
+    <td>
+
+        {{ user.id }}
+
+    </td>
+
+
+    <td>
+
+        {{ user.name }}
+
+    </td>
+
+
+    <td>
+
+        {{ user.email }}
+
+    </td>
+
+
+    <td>
+
+
+        {% if user.role == "admin" %}
+
+
+        <span class="admin-badge admin-badge-admin">
+
+            Admin
+
+        </span>
+
+
+        {% else %}
+
+
+        <span class="admin-badge admin-badge-user">
+
+            User
+
+        </span>
+
+
+        {% endif %}
+
+
+    </td>
+
+
+    <td>
+
+        {{ user.created_at }}
+
+    </td>
+
+</tr>
+
+
+{% else %}
+
+
+<tr>
+
+    <td colspan="5">
+
+        No users registered.
+
+    </td>
+
+</tr>
+
+
+{% endfor %}
+
+
+</table>
+
+
+</div>
+
+
+<a href="/logout"
+   class="admin-logout">
+
+    <i class="fas fa-sign-out-alt"></i>
+
+    Logout
+
+</a>
+
+
+</section>
+
+
+<footer>
+
+<p>
+
+© 2026 Speech To Text Converter |
+
+Admin Dashboard
+
+</p>
+
+</footer>
+
+
+</body>
+
+</html>
